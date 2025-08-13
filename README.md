@@ -10,6 +10,20 @@ Run the following command:
 npx create-turbo@latest
 ```
 
+
+After run please following command:
+```sh
+cd apps
+cd api
+npx prisma format
+npx prisma generate
+```
+If error happend please following command:
+```sh
+npx prisma migrate reset
+npx prisma generate
+```
+
 ## What's inside?
 
 This Turborepo includes the following packages/apps:
@@ -133,3 +147,6 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
 - [Configuration Options](https://turborepo.com/docs/reference/configuration)
 - [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+- [Core UI Reactjs](https://coreui.io/react/docs/getting-started/introduction/)
+- [Prisma](https://www.prisma.io/docs/orm/overview/introduction/)
+

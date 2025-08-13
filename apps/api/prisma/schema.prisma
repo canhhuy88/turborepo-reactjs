@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  staff
+}
+
+enum OrderStatus {
+  pending
+  completed
+  canceled
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  role      Role     @default(staff)
+  store     Store?   @relation(fields: [storeId], references: [id])
+  storeId   String?
+  createdAt DateTime @default(now())
+  orders Order[] 
+}
+
+model Store {
+  id        String    @id @default(uuid())
+  name      String
+  address   String?
+  phone     String?
+  createdAt DateTime  @default(now())
+  users     User[]
+  products  Product[]
+  orders    Order[]
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String
+  products Product[] 
+}
+
+
+model Product {
+  id         String   @id @default(uuid())
+  name       String
+  sku        String   @unique
+  price      Float
+  cost       Float
+  stock      Int
+  categoryId  String?     
+  category    Category?    @relation(fields: [categoryId], references: [id])
+  store      Store    @relation(fields: [storeId], references: [id])
+  storeId    String
+  createdAt  DateTime @default(now())
+  orderItems OrderItem[]
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String?
+  email     String?
+  createdAt DateTime @default(now())
+  orders    Order[]
+}
+
+model Order {
+  id           String       @id @default(uuid())
+  customer     Customer?    @relation(fields: [customerId], references: [id])
+  customerId   String?
+  user         User?        @relation(fields: [userId], references: [id])
+  userId       String?
+  store        Store        @relation(fields: [storeId], references: [id])
+  storeId      String
+  totalAmount  Float
+  status       OrderStatus  @default(pending)
+  createdAt    DateTime     @default(now())
+  orderItems   OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  quantity  Int
+  price     Float
+}
